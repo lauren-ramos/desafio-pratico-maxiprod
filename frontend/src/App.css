@@ -14,15 +14,14 @@
 }
 
 .app-logo {
-  display: grid;
-  place-items: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 16px;
-  background: var(--primary-grad);
-  color: #fff;
-  box-shadow: var(--shadow-primary);
+  width: 54px;
+  height: 54px;
+  border-radius: 14px;
+  background: #fff;
+  padding: 5px;
+  box-shadow: var(--shadow-md);
   flex-shrink: 0;
+  object-fit: contain;
 }
 
 .app-header h1 {
@@ -556,4 +555,117 @@ tbody tr:last-child td {
   .cartao {
     padding: 18px;
   }
+}
+
+/* ---------- Coluna de ID ---------- */
+.celula-id {
+  color: var(--text-soft);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+/* ---------- Botão de perigo (excluir) ---------- */
+.botao-perigo {
+  background: var(--despesa-grad);
+  box-shadow: 0 6px 20px rgba(225, 29, 72, 0.35);
+}
+
+.botao-perigo:hover:not(:disabled) {
+  box-shadow: 0 10px 26px rgba(225, 29, 72, 0.42);
+}
+
+/* ---------- Popup (modal) ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 27, 46, 0.45);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 50;
+  animation: fadeIn 0.2s ease both;
+}
+
+.modal {
+  width: 100%;
+  max-width: 440px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  animation: popIn 0.25s ease both;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
+}
+
+.modal-header h3 {
+  font-size: 17px;
+}
+
+.modal-fechar {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.modal-fechar:hover {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.modal-body {
+  padding: 22px;
+}
+
+.modal-texto {
+  margin: 0 0 4px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ---------- Formulário dentro do popup ---------- */
+.form-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.campo-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.form-modal .campo {
+  width: 100%;
+}
+
+.form-modal .campo input,
+.form-modal .campo select {
+  width: 100%;
+}
+
+.modal-acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 6px;
 }

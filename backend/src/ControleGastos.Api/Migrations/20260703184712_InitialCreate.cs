@@ -1,5 +1,4 @@
-using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -15,7 +14,8 @@ namespace ControleGastos.Api.Migrations
                 name: "Pessoas",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
                     Nome = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
                     Idade = table.Column<int>(type: "INTEGER", nullable: false)
                 },
@@ -28,11 +28,12 @@ namespace ControleGastos.Api.Migrations
                 name: "Transacoes",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
                     Descricao = table.Column<string>(type: "TEXT", maxLength: 500, nullable: false),
                     Valor = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Tipo = table.Column<string>(type: "TEXT", nullable: false),
-                    PessoaId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    PessoaId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

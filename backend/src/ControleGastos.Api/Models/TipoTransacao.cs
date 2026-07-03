@@ -1,8 +1,6 @@
 namespace ControleGastos.Api.Models;
 
-/// <summary>
-/// Tipo de uma transação financeira: entrada (Receita) ou saída (Despesa) de dinheiro.
-/// </summary>
+// Tipo da transação: dinheiro que entra (Receita) ou que sai (Despesa).
 public enum TipoTransacao
 {
     Receita = 0,

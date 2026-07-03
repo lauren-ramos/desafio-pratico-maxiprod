@@ -6,9 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ControleGastos.Api.Controllers;
 
-/// <summary>
-/// Cadastro de pessoas: criação, listagem e deleção (com exclusão em cascata das transações).
-/// </summary>
+// Endpoints de pessoas: listar, criar e excluir.
 [ApiController]
 [Route("api/pessoas")]
 public class PessoasController : ControllerBase
@@ -20,7 +18,7 @@ public class PessoasController : ControllerBase
         _context = context;
     }
 
-    /// <summary>Lista todas as pessoas cadastradas.</summary>
+    // GET /api/pessoas
     [HttpGet]
     public async Task<ActionResult<IEnumerable<PessoaResponseDto>>> Listar()
     {
@@ -32,7 +30,7 @@ public class PessoasController : ControllerBase
         return Ok(pessoas);
     }
 
-    /// <summary>Cadastra uma nova pessoa. O Id é sempre gerado pelo servidor.</summary>
+    // POST /api/pessoas
     [HttpPost]
     public async Task<ActionResult<PessoaResponseDto>> Criar(PessoaCreateDto dto)
     {
@@ -49,12 +47,9 @@ public class PessoasController : ControllerBase
         return CreatedAtAction(nameof(Listar), new { id = pessoa.Id }, response);
     }
 
-    /// <summary>
-    /// Remove uma pessoa. As transações associadas a ela são apagadas automaticamente
-    /// em cascata (configurado no <see cref="AppDbContext"/> e refletido no esquema do SQLite).
-    /// </summary>
-    [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Deletar(Guid id)
+    // DELETE /api/pessoas/{id} - apaga a pessoa e, em cascata, as transações dela.
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Deletar(int id)
     {
         var pessoa = await _context.Pessoas.FindAsync(id);
         if (pessoa is null)

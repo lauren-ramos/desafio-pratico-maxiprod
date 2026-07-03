@@ -6,10 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ControleGastos.Api.Controllers;
 
-/// <summary>
-/// Cadastro de transações (receitas/despesas): criação e listagem.
-/// Não há edição nem deleção individual, conforme especificação do desafio.
-/// </summary>
+// Endpoints de transações: listar e criar (sem editar/excluir, conforme o desafio).
 [ApiController]
 [Route("api/transacoes")]
 public class TransacoesController : ControllerBase
@@ -21,7 +18,7 @@ public class TransacoesController : ControllerBase
         _context = context;
     }
 
-    /// <summary>Lista todas as transações cadastradas, com o nome da pessoa incluído para exibição.</summary>
+    // GET /api/transacoes
     [HttpGet]
     public async Task<ActionResult<IEnumerable<TransacaoResponseDto>>> Listar()
     {
@@ -42,22 +39,18 @@ public class TransacoesController : ControllerBase
         return Ok(transacoes);
     }
 
-    /// <summary>
-    /// Cadastra uma nova transação.
-    /// Regras de negócio aplicadas:
-    /// 1) A pessoa informada precisa existir no cadastro de pessoas;
-    /// 2) Pessoas menores de idade (menos de 18 anos) só podem ter despesas cadastradas,
-    ///    nunca receitas — protege a regra mesmo que o front-end falhe em validar.
-    /// </summary>
+    // POST /api/transacoes
     [HttpPost]
     public async Task<ActionResult<TransacaoResponseDto>> Criar(TransacaoCreateDto dto)
     {
+        // A pessoa precisa existir.
         var pessoa = await _context.Pessoas.FindAsync(dto.PessoaId);
         if (pessoa is null)
         {
             return BadRequest(new { mensagem = "Pessoa informada não existe no cadastro de pessoas." });
         }
 
+        // Menor de idade só pode ter despesa.
         if (pessoa.EhMenorDeIdade && dto.Tipo == TipoTransacao.Receita)
         {
             return BadRequest(new { mensagem = "Pessoas menores de 18 anos só podem ter despesas cadastradas, não receitas." });

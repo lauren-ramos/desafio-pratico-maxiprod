@@ -1,61 +1,61 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { User, Hash, UserPlus, Trash2, Users, ShieldAlert, AlertCircle } from "lucide-react";
-import { pessoasApi } from "../api/pessoas";
-import { ApiError } from "../api/client";
+import { User, Hash, UserPlus, Trash2, Users, ShieldAlert, AlertCircle, Plus } from "lucide-react";
+import { listarPessoas, criarPessoa, excluirPessoa } from "../api";
 import type { Pessoa } from "../types";
-import { iniciais } from "../utils/formatters";
+import { iniciais } from "../utils";
+import { Modal } from "./Modal";
 
-/**
- * Tela de cadastro de pessoas: formulário de criação + listagem + exclusão.
- * Ao excluir uma pessoa, o backend também remove em cascata todas as suas transações.
- */
+// Tela de pessoas: lista, popup para criar e popup para confirmar exclusão.
+// Ao excluir uma pessoa, o back-end também apaga as transações dela.
 export function CadastroPessoas() {
   const [pessoas, setPessoas] = useState<Pessoa[]>([]);
+  const [criando, setCriando] = useState(false);
+  const [excluindo, setExcluindo] = useState<Pessoa | null>(null);
   const [nome, setNome] = useState("");
   const [idade, setIdade] = useState("");
-  const [erro, setErro] = useState<string | null>(null);
-  const [carregando, setCarregando] = useState(false);
+  const [erro, setErro] = useState("");
 
-  async function carregarPessoas() {
-    setPessoas(await pessoasApi.listar());
+  async function carregar() {
+    setPessoas(await listarPessoas());
   }
 
   useEffect(() => {
-    carregarPessoas().catch((e) => setErro(e instanceof ApiError ? e.message : "Falha ao carregar pessoas."));
+    carregar();
   }, []);
 
-  async function handleSubmit(e: FormEvent) {
+  function abrirCriar() {
+    setNome("");
+    setIdade("");
+    setErro("");
+    setCriando(true);
+  }
+
+  async function salvar(e: FormEvent) {
     e.preventDefault();
-    setErro(null);
+    setErro("");
 
     if (!nome.trim() || idade === "") {
       setErro("Informe nome e idade.");
       return;
     }
 
-    setCarregando(true);
     try {
-      await pessoasApi.criar({ nome: nome.trim(), idade: Number(idade) });
-      setNome("");
-      setIdade("");
-      await carregarPessoas();
+      await criarPessoa(nome.trim(), Number(idade));
+      setCriando(false);
+      await carregar();
     } catch (e) {
-      setErro(e instanceof ApiError ? e.message : "Falha ao cadastrar pessoa.");
-    } finally {
-      setCarregando(false);
+      setErro((e as Error).message);
     }
   }
 
-  async function handleDeletar(id: string) {
-    if (!confirm("Excluir esta pessoa também excluirá todas as suas transações. Confirmar?")) {
-      return;
-    }
-    setErro(null);
+  async function confirmarExclusao() {
+    if (!excluindo) return;
     try {
-      await pessoasApi.deletar(id);
-      await carregarPessoas();
+      await excluirPessoa(excluindo.id);
+      setExcluindo(null);
+      await carregar();
     } catch (e) {
-      setErro(e instanceof ApiError ? e.message : "Falha ao excluir pessoa.");
+      setErro((e as Error).message);
     }
   }
 
@@ -66,47 +66,13 @@ export function CadastroPessoas() {
           <span className="icone-titulo">
             <Users size={20} />
           </span>
-          <h2>Cadastro de Pessoas</h2>
+          <h2>Pessoas</h2>
         </div>
-      </div>
-
-      <form className="form-linha" onSubmit={handleSubmit}>
-        <div className="campo campo-nome">
-          <span className="campo-icone">
-            <User size={16} />
-          </span>
-          <input
-            type="text"
-            placeholder="Nome"
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-          />
-        </div>
-        <div className="campo campo-idade">
-          <span className="campo-icone">
-            <Hash size={16} />
-          </span>
-          <input
-            type="number"
-            placeholder="Idade"
-            min={0}
-            max={150}
-            value={idade}
-            onChange={(e) => setIdade(e.target.value)}
-          />
-        </div>
-        <button type="submit" className="botao" disabled={carregando}>
-          <UserPlus size={17} />
-          Adicionar
+        <button className="botao" onClick={abrirCriar}>
+          <Plus size={17} />
+          Nova pessoa
         </button>
-      </form>
-
-      {erro && (
-        <p className="mensagem mensagem-erro">
-          <AlertCircle size={16} />
-          {erro}
-        </p>
-      )}
+      </div>
 
       {pessoas.length === 0 ? (
         <div className="estado-vazio">
@@ -118,6 +84,7 @@ export function CadastroPessoas() {
           <table>
             <thead>
               <tr>
+                <th>#</th>
                 <th>Nome</th>
                 <th>Idade</th>
                 <th></th>
@@ -126,6 +93,7 @@ export function CadastroPessoas() {
             <tbody>
               {pessoas.map((pessoa) => (
                 <tr key={pessoa.id}>
+                  <td className="celula-id">{pessoa.id}</td>
                   <td>
                     <div className="celula-pessoa">
                       <span className="avatar">{iniciais(pessoa.nome)}</span>
@@ -144,7 +112,13 @@ export function CadastroPessoas() {
                     </span>
                   </td>
                   <td style={{ textAlign: "right" }}>
-                    <button className="botao-excluir" onClick={() => handleDeletar(pessoa.id)}>
+                    <button
+                      className="botao-excluir"
+                      onClick={() => {
+                        setErro("");
+                        setExcluindo(pessoa);
+                      }}
+                    >
                       <Trash2 size={15} />
                       Excluir
                     </button>
@@ -154,6 +128,88 @@ export function CadastroPessoas() {
             </tbody>
           </table>
         </div>
+      )}
+
+      {criando && (
+        <Modal titulo="Nova pessoa" aoFechar={() => setCriando(false)}>
+          <form className="form-modal" onSubmit={salvar}>
+            <label className="campo-label">
+              Nome
+              <div className="campo">
+                <span className="campo-icone">
+                  <User size={16} />
+                </span>
+                <input
+                  type="text"
+                  placeholder="Nome"
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
+                  autoFocus
+                />
+              </div>
+            </label>
+
+            <label className="campo-label">
+              Idade
+              <div className="campo">
+                <span className="campo-icone">
+                  <Hash size={16} />
+                </span>
+                <input
+                  type="number"
+                  placeholder="Idade"
+                  min={0}
+                  max={150}
+                  value={idade}
+                  onChange={(e) => setIdade(e.target.value)}
+                />
+              </div>
+            </label>
+
+            {erro && (
+              <p className="mensagem mensagem-erro">
+                <AlertCircle size={16} />
+                {erro}
+              </p>
+            )}
+
+            <div className="modal-acoes">
+              <button type="button" className="botao-secundario" onClick={() => setCriando(false)}>
+                Cancelar
+              </button>
+              <button type="submit" className="botao">
+                <UserPlus size={16} />
+                Salvar
+              </button>
+            </div>
+          </form>
+        </Modal>
+      )}
+
+      {excluindo && (
+        <Modal titulo="Excluir pessoa" aoFechar={() => setExcluindo(null)}>
+          <p className="modal-texto">
+            Tem certeza que deseja excluir <strong>{excluindo.nome}</strong>? As transações dela
+            também serão apagadas.
+          </p>
+
+          {erro && (
+            <p className="mensagem mensagem-erro">
+              <AlertCircle size={16} />
+              {erro}
+            </p>
+          )}
+
+          <div className="modal-acoes">
+            <button className="botao-secundario" onClick={() => setExcluindo(null)}>
+              Cancelar
+            </button>
+            <button className="botao botao-perigo" onClick={confirmarExclusao}>
+              <Trash2 size={16} />
+              Excluir
+            </button>
+          </div>
+        </Modal>
       )}
     </section>
   );

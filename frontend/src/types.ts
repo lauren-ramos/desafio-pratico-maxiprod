@@ -1,24 +1,24 @@
-// Tipos que espelham os DTOs expostos pela API .NET (backend/src/ControleGastos.Api/Dtos).
+// Tipos que representam os dados vindos da API.
 
 export type TipoTransacao = "Receita" | "Despesa";
 
 export interface Pessoa {
-  id: string;
+  id: number;
   nome: string;
   idade: number;
 }
 
 export interface Transacao {
-  id: string;
+  id: number;
   descricao: string;
   valor: number;
   tipo: TipoTransacao;
-  pessoaId: string;
+  pessoaId: number;
   pessoaNome: string;
 }
 
 export interface TotalPorPessoa {
-  pessoaId: string;
+  pessoaId: number;
   nome: string;
   totalReceitas: number;
   totalDespesas: number;

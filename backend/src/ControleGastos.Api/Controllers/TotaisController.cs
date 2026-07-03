@@ -6,10 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ControleGastos.Api.Controllers;
 
-/// <summary>
-/// Consulta de totais: para cada pessoa cadastrada, soma receitas, despesas e calcula o saldo;
-/// ao final, soma tudo para exibir o total geral do domicílio.
-/// </summary>
+// Endpoint de totais: soma receitas, despesas e saldo de cada pessoa e o total geral.
 [ApiController]
 [Route("api/totais")]
 public class TotaisController : ControllerBase
@@ -24,9 +21,7 @@ public class TotaisController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<ConsultaTotaisResponseDto>> ObterTotais()
     {
-        // Carrega todas as pessoas com suas transações para calcular os totais em memória.
-        // Para o volume de dados de um controle de gastos residencial isso é suficiente;
-        // se a base crescesse muito, o agregado poderia ser feito via GroupBy no banco.
+        // Busca as pessoas com suas transações e calcula os totais.
         var pessoas = await _context.Pessoas
             .Include(p => p.Transacoes)
             .OrderBy(p => p.Nome)

@@ -1,13 +1,9 @@
-const currencyFormatter = new Intl.NumberFormat("pt-BR", {
-  style: "currency",
-  currency: "BRL",
-});
-
+// Formata um número como dinheiro em reais (ex.: 1200 -> "R$ 1.200,00").
 export function formatarMoeda(valor: number): string {
-  return currencyFormatter.format(valor);
+  return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
-/** Gera as iniciais de um nome (até 2 letras) para exibir no avatar. */
+// Pega as iniciais de um nome para mostrar no avatar (ex.: "Maria Silva" -> "MS").
 export function iniciais(nome: string): string {
   const partes = nome.trim().split(/\s+/);
   const primeira = partes[0]?.[0] ?? "?";

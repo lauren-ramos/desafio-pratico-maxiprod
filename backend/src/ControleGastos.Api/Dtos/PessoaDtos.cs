@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ControleGastos.Api.Dtos;
 
-/// <summary>Dados recebidos do cliente para cadastrar uma nova pessoa.</summary>
+// Dados que o cliente envia para criar uma pessoa.
 public class PessoaCreateDto
 {
     [Required(ErrorMessage = "O nome é obrigatório.")]
@@ -13,12 +13,10 @@ public class PessoaCreateDto
     public int Idade { get; set; }
 }
 
-/// <summary>Dados de uma pessoa devolvidos pela API (inclui o Id gerado pelo servidor).</summary>
+// Dados de uma pessoa que a API devolve.
 public class PessoaResponseDto
 {
-    public Guid Id { get; set; }
-
+    public int Id { get; set; }
     public string Nome { get; set; } = string.Empty;
-
     public int Idade { get; set; }
 }

@@ -3,7 +3,7 @@ using ControleGastos.Api.Models;
 
 namespace ControleGastos.Api.Dtos;
 
-/// <summary>Dados recebidos do cliente para cadastrar uma nova transação.</summary>
+// Dados que o cliente envia para criar uma transação.
 public class TransacaoCreateDto
 {
     [Required(ErrorMessage = "A descrição é obrigatória.")]
@@ -16,21 +16,16 @@ public class TransacaoCreateDto
     public TipoTransacao Tipo { get; set; }
 
     [Required(ErrorMessage = "A pessoa é obrigatória.")]
-    public Guid PessoaId { get; set; }
+    public int PessoaId { get; set; }
 }
 
-/// <summary>Dados de uma transação devolvidos pela API, incluindo o nome da pessoa para facilitar exibição.</summary>
+// Dados de uma transação que a API devolve (com o nome da pessoa junto).
 public class TransacaoResponseDto
 {
-    public Guid Id { get; set; }
-
+    public int Id { get; set; }
     public string Descricao { get; set; } = string.Empty;
-
     public decimal Valor { get; set; }
-
     public TipoTransacao Tipo { get; set; }
-
-    public Guid PessoaId { get; set; }
-
+    public int PessoaId { get; set; }
     public string PessoaNome { get; set; } = string.Empty;
 }

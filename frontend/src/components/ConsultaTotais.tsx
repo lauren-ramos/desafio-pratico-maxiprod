@@ -1,38 +1,26 @@
 import { useEffect, useState } from "react";
-import {
-  PieChart,
-  RefreshCw,
-  TrendingUp,
-  TrendingDown,
-  Wallet,
-  AlertCircle,
-  Users,
-} from "lucide-react";
-import { totaisApi } from "../api/totais";
-import { ApiError } from "../api/client";
-import type { ConsultaTotais as ConsultaTotaisDto } from "../types";
-import { formatarMoeda, iniciais } from "../utils/formatters";
+import { PieChart, RefreshCw, TrendingUp, TrendingDown, Wallet, AlertCircle, Users } from "lucide-react";
+import { obterTotais } from "../api";
+import type { ConsultaTotais as Totais } from "../types";
+import { formatarMoeda, iniciais } from "../utils";
 
 function classeSaldo(saldo: number): string {
   return saldo < 0 ? "saldo-negativo" : "saldo-positivo";
 }
 
-/**
- * Tela de consulta de totais: cartões de resumo geral no topo, seguidos de uma linha
- * por pessoa (receitas/despesas/saldo) e da linha de total geral somando todas as pessoas.
- */
+// Tela de totais: cartões com o total geral no topo e uma tabela com o total de cada pessoa.
 export function ConsultaTotais() {
-  const [dados, setDados] = useState<ConsultaTotaisDto | null>(null);
-  const [erro, setErro] = useState<string | null>(null);
+  const [dados, setDados] = useState<Totais | null>(null);
+  const [erro, setErro] = useState("");
   const [atualizando, setAtualizando] = useState(false);
 
   async function carregar() {
     setAtualizando(true);
     try {
-      setDados(await totaisApi.obter());
-      setErro(null);
+      setDados(await obterTotais());
+      setErro("");
     } catch (e) {
-      setErro(e instanceof ApiError ? e.message : "Falha ao carregar totais.");
+      setErro((e as Error).message);
     } finally {
       setAtualizando(false);
     }
@@ -40,7 +28,6 @@ export function ConsultaTotais() {
 
   useEffect(() => {
     carregar();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const temPessoas = dados !== null && dados.pessoas.length > 0;
@@ -67,7 +54,6 @@ export function ConsultaTotais() {
         </p>
       )}
 
-      {/* Cartões de resumo com o total geral do domicílio */}
       {dados && (
         <div className="resumo-cards">
           <div className="resumo-card card-receita">

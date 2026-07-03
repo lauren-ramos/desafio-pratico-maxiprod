@@ -3,10 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ControleGastos.Api.Data;
 
-/// <summary>
-/// Contexto do Entity Framework Core. Usa SQLite para que os dados persistam
-/// em um arquivo local (controlegastos.db) e sobrevivam ao fechamento da aplicação.
-/// </summary>
+// Conexão com o banco (SQLite). Guarda pessoas e transações em um arquivo local.
 public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
@@ -32,8 +29,7 @@ public class AppDbContext : DbContext
             entity.Property(t => t.Valor).HasColumnType("decimal(18,2)");
             entity.Property(t => t.Tipo).HasConversion<string>();
 
-            // Regra de negócio: ao deletar uma pessoa, todas as suas transações são
-            // apagadas automaticamente (exclusão em cascata) pelo próprio banco de dados.
+            // Ao excluir a pessoa, o banco apaga as transações dela automaticamente.
             entity.HasOne(t => t.Pessoa)
                   .WithMany(p => p.Transacoes)
                   .HasForeignKey(t => t.PessoaId)
