@@ -1,0 +1,127 @@
+:root {
+  /* ---- Paleta de cores ---- */
+  --text: #1e1b2e;
+  --text-muted: #6b6480;
+  --text-soft: #928ba3;
+
+  --bg: #f4f2fb;
+  --bg-grad-1: #eef0ff;
+  --bg-grad-2: #f9f0fb;
+  --surface: #ffffff;
+  --surface-alt: #faf9ff;
+  --border: #eae7f4;
+  --border-strong: #ddd8ec;
+
+  --primary: #6d28d9;
+  --primary-hover: #5b21b6;
+  --primary-soft: #f1ebfe;
+  --primary-grad: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+
+  --receita: #059669;
+  --receita-soft: #e7f7f1;
+  --receita-grad: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+
+  --despesa: #e11d48;
+  --despesa-soft: #fdeaef;
+  --despesa-grad: linear-gradient(135deg, #f43f5e 0%, #fb7185 100%);
+
+  --warning: #b45309;
+  --warning-soft: #fdf3e3;
+
+  /* ---- Sombras ---- */
+  --shadow-sm: 0 1px 2px rgba(30, 27, 46, 0.06);
+  --shadow-md: 0 4px 16px rgba(76, 29, 149, 0.08);
+  --shadow-lg: 0 12px 40px rgba(76, 29, 149, 0.12);
+  --shadow-primary: 0 6px 20px rgba(124, 58, 237, 0.35);
+
+  --radius: 14px;
+  --radius-sm: 10px;
+
+  font: 16px/1.5 "Segoe UI", system-ui, Roboto, sans-serif;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(1100px 600px at 12% -10%, var(--bg-grad-1) 0%, transparent 55%),
+    radial-gradient(1000px 700px at 100% 0%, var(--bg-grad-2) 0%, transparent 50%),
+    var(--bg);
+  background-attachment: fixed;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--text);
+  font-weight: 700;
+  margin: 0;
+}
+
+/* ---- Animações reutilizáveis ---- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  60% {
+    transform: scale(1.03);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

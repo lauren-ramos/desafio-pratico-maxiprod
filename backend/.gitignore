@@ -1,0 +1,7 @@
+bin/
+obj/
+
+# Banco de dados SQLite local (dados de execução, não fazem parte do código-fonte)
+*.db
+*.db-shm
+*.db-wal
