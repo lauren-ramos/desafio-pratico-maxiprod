@@ -1,7 +1,7 @@
 // Funções que conversam com a API do back-end (.NET).
 import type { Pessoa, Transacao, ConsultaTotais, TipoTransacao } from "./types";
 
-const API_URL = "http://localhost:5149";
+const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5149";
 
 // Faz a requisição e, se a API responder com erro, lança a mensagem recebida.
 async function pedir(caminho: string, opcoes?: RequestInit) {
