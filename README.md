@@ -4,14 +4,6 @@ Sistema simples para cadastro de pessoas, cadastro de transacoes financeiras e c
 
 Projeto desenvolvido como desafio pratico para vaga de estagio.
 
-## Link do projeto
-
-Frontend publicado na Vercel:
-
-https://desafio-pratico-maxiprod.vercel.app/
-
-Observacao: o link da Vercel publica apenas o frontend. Para usar todas as funcionalidades, a API do backend precisa estar rodando tambem.
-
 ## Tecnologias utilizadas
 
 - Back-end: .NET 8, ASP.NET Core, Entity Framework Core e SQLite
@@ -137,11 +129,4 @@ desafio-pratico-maxiprod/
   frontend/
     src/
   iniciar.bat
-  vercel.json
 ```
-
-## Observacao sobre deploy
-
-O frontend esta configurado para deploy na Vercel.
-
-Como o backend foi feito em .NET com SQLite local, ele deve ser executado localmente ou publicado em uma plataforma que suporte APIs .NET, como Render, Railway, Azure ou Fly.io.
